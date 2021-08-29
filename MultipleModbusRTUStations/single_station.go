@@ -7,21 +7,26 @@ import (
 )
 
 // Only Single Station
-func NewRTUSingleStation() (err error) {
+func ConnectRTUSingleStation(stationID byte, oldHandler *modbus.RTUClientHandler) (thisHandler *modbus.RTUClientHandler, err error) {
 
 	var result []byte
+	var client modbus.Client
 
 	handler := modbus.NewRTUClientHandler(COM_ADDRESS)
 	handler.BaudRate = baudRate
 	handler.DataBits = dataBits
 	handler.Parity = parity
 	handler.StopBits = stopBits
-	handler.SlaveId = station_1_ID
+	handler.SlaveId = stationID
 	handler.Timeout = timeoutMs
 
 	handler.Connect()
 
-	client := modbus.NewClient(handler)
+	if oldHandler == nil {
+		client = modbus.NewClient(handler)
+	} else {
+		client = modbus.NewClient2(handler, oldHandler)
+	}
 
 	// Switch On M1
 	_, err = client.WriteSingleCoil(MODBUS_DELTA["M"][1], ON)
@@ -38,5 +43,8 @@ func NewRTUSingleStation() (err error) {
 	}
 	log.Println("Result from D-23", result)
 
-	return nil
+	if oldHandler == nil {
+		return handler, nil
+	}
+	return nil, nil
 }
