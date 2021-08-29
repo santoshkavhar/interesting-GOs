@@ -21,14 +21,14 @@ func ConnectRTUMultipleStations_WrongWay() (err error) {
 // Same Transporter
 func ConnectRTUMultipleStations_RightWay() (err error) {
 
-	var firstStationHandler *modbus.RTUClientHandler
+	var firstStationTransporter *modbus.RTUClientHandler
 
-	firstStationHandler, err = ConnectRTUSingleStation(station_1_ID, nil)
+	firstStationTransporter, err = ConnectRTUSingleStation(station_1_ID, nil)
 	if err != nil {
 		return
 	}
 
 	// Connect this way to all other stations
-	_, err = ConnectRTUSingleStation(station_2_ID, firstStationHandler)
+	_, err = ConnectRTUSingleStation(station_2_ID, firstStationTransporter)
 	return
 }

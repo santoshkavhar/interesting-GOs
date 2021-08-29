@@ -7,7 +7,7 @@ import (
 )
 
 // Only Single Station
-func ConnectRTUSingleStation(stationID byte, oldHandler *modbus.RTUClientHandler) (thisHandler *modbus.RTUClientHandler, err error) {
+func ConnectRTUSingleStation(stationID byte, firstStationTransporter *modbus.RTUClientHandler) (_ *modbus.RTUClientHandler, err error) {
 
 	var result []byte
 	var client modbus.Client
@@ -22,10 +22,10 @@ func ConnectRTUSingleStation(stationID byte, oldHandler *modbus.RTUClientHandler
 
 	handler.Connect()
 
-	if oldHandler == nil {
+	if firstStationTransporter == nil {
 		client = modbus.NewClient(handler)
 	} else {
-		client = modbus.NewClient2(handler, oldHandler)
+		client = modbus.NewClient2(handler, firstStationTransporter)
 	}
 
 	// Switch On M1
@@ -43,7 +43,7 @@ func ConnectRTUSingleStation(stationID byte, oldHandler *modbus.RTUClientHandler
 	}
 	log.Println("Result from D-23", result)
 
-	if oldHandler == nil {
+	if firstStationTransporter == nil {
 		return handler, nil
 	}
 	return nil, nil
