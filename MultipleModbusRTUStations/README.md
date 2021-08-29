@@ -17,3 +17,6 @@ sudo chmod +766 COM_ADDRESS
 `
 ll /sys/class/tty/ttyUSB*
 `
+
+## NOTE
+Station is alias for Slave. 
